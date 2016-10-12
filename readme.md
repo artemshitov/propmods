@@ -107,6 +107,6 @@ const b = block('button', {
 });
 ```
 
-## Licence
+## License
 
 MIT.
