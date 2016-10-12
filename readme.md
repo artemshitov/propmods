@@ -35,7 +35,7 @@ This documentation assumes that you are using a modern JavaScript bundler like W
 Install Propmods with NPM:
 
 ```
-npm install propmods
+npm install --save propmods
 ```
 
 Then, import Propmods and choose a block name:
