@@ -30,8 +30,15 @@ class Button extends React.Component {
 
 ## Usage
 
+This documentation assumes that you are using a modern JavaScript bundler like Webpack or Browserify, NPM package manager, and an ES2015 compiler like Babel.
 
-First, import Propmods and choose a block name:
+Install Propmods with NPM:
+
+```
+npm install propmods
+```
+
+Then, import Propmods and choose a block name:
 
 ```js
 import block from 'propmods';
