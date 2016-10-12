@@ -30,7 +30,7 @@ class Button extends React.Component {
 
 ## Usage
 
-This documentation assumes that you are using a modern JavaScript bundler like Webpack or Browserify, NPM package manager, and an ES2015 compiler like Babel.
+This documentation assumes that you are using a modern JavaScript bundler like Webpack or Browserify, NPM package manager, and an ES2015 compiler (e.g. Babel).
 
 Install Propmods with NPM:
 
