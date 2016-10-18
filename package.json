@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/artemshitov/propmods.git"
   },
-  "main": "build/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "compile": "./node_modules/.bin/babel src --out-dir lib",
     "prepublish": "npm test && npm run compile",
