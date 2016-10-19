@@ -54,6 +54,10 @@ suite('Propmods', () => {
             test('with array of multiple mixins', eq(
                 b(mods1, ['foo', 'bar']).className, 'Test Test_foo_bar foo bar'
             ));
+
+            test('with mods in props', eq(
+                b(props1).className, 'Test Test_foo_bar'
+            ));
         });
 
         suite('element', () => {

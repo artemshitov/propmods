@@ -24,7 +24,7 @@ export default function(block, opts = {}) {
                 [].push.apply(mix, x);
             } else {
                 let {props, state, ...other} = x;
-                [props, state, other].forEach(ms => extend(mods, pickMods(x, opts)));
+                [props, state, other].forEach(ms => extend(mods, pickMods(ms, opts)));
             }
         });
 
