@@ -1,14 +1,14 @@
-import assert from 'assert';
-import _ from 'lodash';
+const assert = require('assert');
+const _ = require('lodash');
 
-import block from '../src/index';
+const block = require('../lib/index').default;
 
 let eq = (x, y) => (() => assert.equal(x, y));
 
 suite('Propmods', () => {
     let mods1 = {foo: 'bar'};
     let mods2 = {baz: 'quux'};
-    let mods3 = {...mods1, ...mods2};
+    let mods3 = _.extend({}, mods1, mods2);
     let mods4 = {a: {b: 'c'}};
 
     let props1 = {props: mods1};
@@ -62,7 +62,7 @@ suite('Propmods', () => {
 
         suite('element', () => {
             test('solo', eq(
-                b('el', ).className, 'Test__el'
+                b('el').className, 'Test__el'
             ));
 
             test('with mods', eq(
