@@ -7,17 +7,20 @@
     "url": "https://github.com/artemshitov/propmods.git"
   },
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "compile": "./node_modules/.bin/babel src --out-dir lib",
+    "compile": "tsc",
     "prepublish": "npm test && npm run compile",
-    "test": "./node_modules/.bin/mocha --ui=tdd"
+    "test": "mocha --ui=tdd"
   },
   "author": "Artem Shitov <inbox@artemshitov.ru>",
   "license": "MIT",
   "dependencies": {
+    "@types/lodash": "^4.14.62",
     "lodash": "^4.16.4"
   },
   "devDependencies": {
-    "mocha": "^3.1.2"
+    "mocha": "^3.1.2",
+    "typescript": "^2.2.2"
   }
 }
