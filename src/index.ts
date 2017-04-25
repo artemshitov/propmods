@@ -1,5 +1,8 @@
 import extend = require('lodash/extend');
 import pickBy = require('lodash/pickBy');
+import isString = require('lodash/isString');
+import isNumber = require('lodash/isNumber');
+import isBoolean = require('lodash/isBoolean');
 
 export interface Options {
     elementDelimiter?: string;
@@ -54,7 +57,7 @@ export default function (block: string, opts: Options = {}) {
 function pickMods(target: any, opts: Settings) {
     let isValidClassName = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
     return pickBy(target, (v, k) => {
-        return v && isValidClassName.test(k + opts.modValueDelimiter + v)
+        return v && (isString(v) || isNumber(v) || isBoolean(v)) && isValidClassName.test(k + opts.modValueDelimiter + v)
     });
 }
 

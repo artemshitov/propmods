@@ -58,6 +58,10 @@ suite('Propmods', () => {
             test('with mods in props', eq(
                 b(props1).className, 'Test Test_foo_bar'
             ));
+
+            test('with empty array in props', eq(
+                b({foo: []}).className, 'Test'
+            ));
         });
 
         suite('element', () => {
@@ -91,6 +95,10 @@ suite('Propmods', () => {
 
             test('with array of multiple mixins', eq(
                 b('el', mods1, ['foo', 'bar']).className, 'Test__el Test__el_foo_bar foo bar'
+            ));
+
+            test('with empty array in props', eq(
+                b('el', {foo: []}).className, 'Test__el'
             ));
         });
     });
