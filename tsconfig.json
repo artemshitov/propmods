@@ -4,6 +4,7 @@
         "target": "es5",
         "module": "commonjs",
         "rootDir": "src",
+        "lib": ["es6", "dom"],
         "declaration": true
     },
     "include": [
