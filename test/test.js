@@ -1,5 +1,4 @@
 const assert = require('assert');
-const _ = require('lodash');
 const React = require('react');
 
 const block = require('../lib/index').default;
@@ -9,7 +8,7 @@ let eq = (x, y) => (() => assert.equal(x, y));
 suite('Propmods', () => {
     let mods1 = {foo: 'bar'};
     let mods2 = {baz: 'quux'};
-    let mods3 = _.extend({}, mods1, mods2);
+    let mods3 = Object.assign({}, mods1, mods2);
     let mods4 = {a: {b: 'c'}};
 
     class TestComponent extends React.Component {}
@@ -115,11 +114,11 @@ suite('Propmods', () => {
     suite('with case conversions', () => {
         let mods = {fooBar: 'bazQuux'};
 
-        test('with kebab case', () => {
+        test('with uppercase', () => {
             let b = block('Test', {
-                caseConversion: _.kebabCase
+                caseConversion: (str) => str.toUpperCase()
             });
-            assert.equal(b('ElEment', mods).className, 'test__el-ement test__el-ement_foo-bar_baz-quux');
+            assert.equal(b('ElEment', mods).className, 'TEST__ELEMENT TEST__ELEMENT_FOOBAR_BAZQUUX');
         });
     })
 });
