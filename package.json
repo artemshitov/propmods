@@ -10,7 +10,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "compile": "tsc",
-    "prepublish": "npm test && npm run compile",
+    "prepublish": "npm run compile && npm test",
     "test": "mocha --ui=tdd"
   },
   "author": "Artem Shitov <inbox@artemshitov.ru>",
