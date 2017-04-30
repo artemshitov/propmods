@@ -5,6 +5,7 @@
         "module": "commonjs",
         "rootDir": "src",
         "lib": ["es6", "dom"],
+        "strict": true,
         "declaration": true
     },
     "include": [
