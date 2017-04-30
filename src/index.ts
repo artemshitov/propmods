@@ -1,83 +1,102 @@
-import extend = require('lodash/extend');
-import pickBy = require('lodash/pickBy');
-import isString = require('lodash/isString');
-import isNumber = require('lodash/isNumber');
-import isBoolean = require('lodash/isBoolean');
+import { Component } from 'react';
+import { assign, pickBy } from './util';
 
 export interface Options {
-    elementDelimiter?: string;
-    modDelimiter?: string;
-    modValueDelimiter?: string;
-    caseConversion?: (str: string) => string;
-}
-
-interface Settings {
     elementDelimiter: string;
     modDelimiter: string;
     modValueDelimiter: string;
     caseConversion: (str: string) => string;
 }
 
-const defaultOptions: Settings = {
+export interface BEMEntity {
+    base: string;
+    mods: Mods;
+    mix: string[];
+}
+
+export type Mods = { [key: string]: ModValue };
+export type ModValue = string | boolean;
+type ClassNameProp = { className: string; }
+type ClassesArg = string[] | Component<any, any> | Mods;
+
+const defaultOptions: Options = {
     elementDelimiter: '__',
     modDelimiter: '_',
     modValueDelimiter: '_',
-    caseConversion: x => x
+    caseConversion: (str: string) => str
 };
 
-export interface Result {
-    className: string;
+const isValidClassName = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
+
+export function withOptions(opts: Partial<Options> = {}) {
+    return function (block: string) {
+        return propmods(block, opts);
+    }
 }
 
-export default function (block: string, opts: Options = {}) {
-    const settings: Settings = extend({}, defaultOptions, opts);
+export default function propmods(block: string, options: Partial<Options> = {}) {
+    const opts: Options = assign({}, defaultOptions, options);
+    block = opts.caseConversion(block);
 
-    return function classes(el?: string, ...rest: (string[] | { [key: string]: any })[]): Result {
-        if (el && typeof el !== 'string') {
-            return classes(undefined, el, ...rest);
+    return function (el: string | ClassesArg, ...rest: ClassesArg[]): ClassNameProp {
+        let base = block;
+        let mods, mix;
+
+        if (typeof el === 'string') {
+            base += opts.elementDelimiter + opts.caseConversion(el);
+            [mods, mix] = parseArgs(rest);
+        } else {
+            [mods, mix] = parseArgs([el as ClassesArg, ...rest]);
         }
 
-        let mods = {};
-        let mix: string[] = [];
-
-        rest.forEach(x => {
-            if (Array.isArray(x)) {
-                [].push.apply(mix, x);
-            } else {
-                let { props, state, ...other } = x;
-                [props, state, other].forEach(ms => extend(mods, pickMods(ms, settings)));
-            }
-        });
-
-        return { className: buildClassName(block, el, mods, mix, settings) };
-    }
+        return toClassName({ base, mods, mix }, opts);
+    };
 }
 
+function pickMods(target: object): Mods {
+    return pickBy(target as Mods, (v, k) =>
+        typeof v === 'boolean' ||
+        typeof v === 'string' && isValidClassName.test(k + v)
+    );
+}
 
-function pickMods(target: any, opts: Settings) {
-    let isValidClassName = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
-    return pickBy(target, (v, k) => {
-        return v && (isString(v) || isNumber(v) || isBoolean(v)) && isValidClassName.test(k + opts.modValueDelimiter + v)
+function parseArgs(args: ClassesArg[]): [Mods, string[]] {
+    let mods = {};
+    const mix: string[] = [];
+
+    args.forEach(x => {
+        if (x instanceof Component) {
+            assign(mods, pickMods(x.props || {}));
+            assign(mods, pickMods(x.state || {}));
+            return;
+        }
+
+        if (Array.isArray(x)) {
+            [].push.apply(mix, x);
+            return;
+        }
+
+        assign(mods, pickMods(x));
     });
+
+    return [mods, mix];
 }
 
-function buildClassName(block: string, el: string | undefined, mods: any, mix: string[], opts: Settings) {
-    block = opts.caseConversion(block);
-    if (el) {
-        el = opts.caseConversion(el);
-    }
-    let base = el ? block + opts.elementDelimiter + el : block;
-    let classes = Object.keys(mods)
-        .map(k => {
-            let v = mods[k] === true ? true : opts.caseConversion(mods[k]);
-            k = opts.caseConversion(k);
-            let mod = v === true ? k : k + opts.modValueDelimiter + v;
+function toClassName(source: BEMEntity, opts: Options): ClassNameProp {
+    const { base, mods, mix } = source;
+    const modClasses = Object.keys(mods)
+        .map(key => {
+            const name = opts.caseConversion(key);
+            const value = mods[key];
+
+            const mod = typeof value === 'string' ?
+                name + opts.modValueDelimiter + opts.caseConversion(value) :
+                name;
+
             return base + opts.modDelimiter + mod;
         });
-    [].push.apply(classes, mix);
-    classes.unshift(base);
-    if (mods.className) {
-        classes.push(mods.className);
-    }
-    return classes.join(' ');
+    const classes = [base, ...modClasses, ...mix];
+    return {
+        className: classes.join(' ')
+    };
 }

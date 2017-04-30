@@ -1,5 +1,6 @@
 const assert = require('assert');
 const _ = require('lodash');
+const React = require('react');
 
 const block = require('../lib/index').default;
 
@@ -11,13 +12,9 @@ suite('Propmods', () => {
     let mods3 = _.extend({}, mods1, mods2);
     let mods4 = {a: {b: 'c'}};
 
-    let props1 = {props: mods1};
-    let props2 = {props: mods2};
-    let props3 = {props: mods3};
+    class TestComponent extends React.Component {}
 
-    let state1 = {state: mods1};
-    let state2 = {state: mods2};
-    let state3 = {state: mods3};
+    let component1 = new TestComponent(mods1);
 
     suite('with default options', () => {
         let b = block('Test');
@@ -56,7 +53,7 @@ suite('Propmods', () => {
             ));
 
             test('with mods in props', eq(
-                b(props1).className, 'Test Test_foo_bar'
+                b(component1).className, 'Test Test_foo_bar'
             ));
 
             test('with empty array in props', eq(
