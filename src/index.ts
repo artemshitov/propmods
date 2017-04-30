@@ -17,7 +17,7 @@ export interface BEMEntity {
 export type Mods = { [key: string]: ModValue };
 export type ModValue = string | boolean;
 type ClassNameProp = { className: string; }
-type ClassesArg = string[] | Component<any, any> | Mods;
+type ClassesArg = string[] | Component<any, any> | object;
 
 const defaultOptions: Options = {
     elementDelimiter: '__',
