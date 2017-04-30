@@ -6,6 +6,7 @@
         "rootDir": "src",
         "lib": ["es6", "dom"],
         "strict": true,
+        "types": [],
         "declaration": true
     },
     "include": [
