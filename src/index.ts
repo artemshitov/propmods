@@ -81,18 +81,17 @@ function parseArgs(args: ClassesArg[]): [Mods, string[]] {
 
 function toClassName(source: BEMEntity, opts: Options): ClassNameProp {
     const { base, mods, mix } = source;
-    const modClasses = Object.keys(mods)
-        .map(key => {
-            const name = opts.transformKeys(key);
-            const value = mods[key];
+    const modClasses = Object.keys(mods).map(key => {
+        const name = opts.transformKeys(key);
+        const value = mods[key];
 
-            const mod = typeof value === 'boolean' ?
-                name :
-                name + opts.modValueDelimiter + value.toString();
+        const mod = typeof value === 'boolean' ?
+            name :
+            name + opts.modValueDelimiter + value.toString();
 
-            return base + opts.modDelimiter + mod;
-        });
-    
+        return base + opts.modDelimiter + mod;
+    });
+
     return {
         className: [base, ...modClasses, ...mix].join(' ')
     };
