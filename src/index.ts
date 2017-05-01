@@ -15,7 +15,7 @@ export interface BEMEntity {
 }
 
 export type Mods = { [key: string]: ModValue };
-export type ModValue = string | boolean;
+export type ModValue = string | boolean | number;
 type ClassNameProp = { className: string; }
 type ClassesArg = string[] | Component<any, any> | object;
 
@@ -55,7 +55,8 @@ export default function propmods(block: string, options: Partial<Options> = {}) 
 
 function pickMods(target: object): Mods {
     return pickBy(target as Mods, (v, k) =>
-        typeof v === 'boolean' ||
+        v === true ||
+        typeof v === 'number' && Math.floor(v) === v ||
         typeof v === 'string' && isValidClassName.test(k + v)
     );
 }
@@ -89,9 +90,16 @@ function toClassName(source: BEMEntity, opts: Options): ClassNameProp {
             const name = opts.caseConversion(key);
             const value = mods[key];
 
-            const mod = typeof value === 'string' ?
-                name + opts.modValueDelimiter + opts.caseConversion(value) :
-                name;
+            const mod = (() => {
+                switch (typeof value) {
+                    case 'string':
+                        return name + opts.modValueDelimiter + opts.caseConversion(value as string);
+                    case 'boolean':
+                        return name;
+                    case 'number':
+                        return name + opts.modValueDelimiter + value.toString();
+                }
+            })();
 
             return base + opts.modDelimiter + mod;
         });
