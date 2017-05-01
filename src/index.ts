@@ -38,15 +38,18 @@ export default function propmods(block: string, options: Partial<Options> = {}) 
     const opts: Options = assign({}, defaultOptions, options);
     block = opts.caseConversion(block);
 
-    return function (el: string | ClassesArg, ...rest: ClassesArg[]): ClassNameProp {
+    return function (el: string | ClassesArg | undefined, ...rest: ClassesArg[]): ClassNameProp {
         let base = block;
-        let mods, mix;
+        let mods = {};
+        let mix: string[] = [];
 
-        if (typeof el === 'string') {
-            base += opts.elementDelimiter + opts.caseConversion(el);
-            [mods, mix] = parseArgs(rest);
-        } else {
-            [mods, mix] = parseArgs([el as ClassesArg, ...rest]);
+        if (arguments.length > 0) {
+            if (typeof el === 'string') {
+                base += opts.elementDelimiter + opts.caseConversion(el);
+                [mods, mix] = parseArgs(rest);
+            } else {
+                [mods, mix] = parseArgs([el as ClassesArg, ...rest]);
+            }
         }
 
         return toClassName({ base, mods, mix }, opts);
