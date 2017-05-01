@@ -112,13 +112,13 @@ suite('Propmods', () => {
     });
 
     suite('with case conversions', () => {
-        let mods = {fooBar: 'bazQuux'};
+        let mods = {fooBar: 'baz-quux'};
 
-        test('with uppercase', () => {
+        test('with kebab case', () => {
             let b = block('Test', {
-                caseConversion: (str) => str.toUpperCase()
+                transformKeys: (str) => str.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
             });
-            assert.equal(b('ElEment', mods).className, 'TEST__ELEMENT TEST__ELEMENT_FOOBAR_BAZQUUX');
+            assert.equal(b('element', mods).className, 'Test__element Test__element_foo-bar_baz-quux');
         });
     })
 });

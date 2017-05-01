@@ -5,7 +5,7 @@ export interface Options {
     elementDelimiter: string;
     modDelimiter: string;
     modValueDelimiter: string;
-    caseConversion: (str: string) => string;
+    transformKeys: (str: string) => string;
 }
 
 export interface BEMEntity {
@@ -23,7 +23,7 @@ const defaultOptions: Options = {
     elementDelimiter: '__',
     modDelimiter: '_',
     modValueDelimiter: '_',
-    caseConversion: (str: string) => str
+    transformKeys: (str: string) => str
 };
 
 const isValidClassName = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
@@ -36,7 +36,6 @@ export function withOptions(opts: Partial<Options> = {}) {
 
 export default function propmods(block: string, options: Partial<Options> = {}) {
     const opts: Options = assign({}, defaultOptions, options);
-    block = opts.caseConversion(block);
 
     return function (el: string | ClassesArg | undefined, ...rest: ClassesArg[]): ClassNameProp {
         let base = block;
@@ -45,7 +44,7 @@ export default function propmods(block: string, options: Partial<Options> = {}) 
 
         if (arguments.length > 0) {
             if (typeof el === 'string') {
-                base += opts.elementDelimiter + opts.caseConversion(el);
+                base += opts.elementDelimiter + el;
                 [mods, mix] = parseArgs(rest);
             } else {
                 [mods, mix] = parseArgs([el as ClassesArg, ...rest]);
@@ -90,24 +89,17 @@ function toClassName(source: BEMEntity, opts: Options): ClassNameProp {
     const { base, mods, mix } = source;
     const modClasses = Object.keys(mods)
         .map(key => {
-            const name = opts.caseConversion(key);
+            const name = opts.transformKeys(key);
             const value = mods[key];
 
-            const mod = (() => {
-                switch (typeof value) {
-                    case 'string':
-                        return name + opts.modValueDelimiter + opts.caseConversion(value as string);
-                    case 'boolean':
-                        return name;
-                    case 'number':
-                        return name + opts.modValueDelimiter + value.toString();
-                }
-            })();
+            const mod = typeof value === 'boolean' ?
+                name :
+                name + opts.modValueDelimiter + value.toString();
 
             return base + opts.modDelimiter + mod;
         });
-    const classes = [base, ...modClasses, ...mix];
+    
     return {
-        className: classes.join(' ')
+        className: [base, ...modClasses, ...mix].join(' ')
     };
 }
