@@ -28,20 +28,35 @@ class Button extends React.Component {
 </button>
 ```
 
-## Usage
+## Install
 
-This documentation assumes that you are using a modern JavaScript bundler like Webpack or Browserify, NPM package manager, and an ES2015 compiler (e.g. Babel).
+Yarn:
 
-Install Propmods with NPM:
+```
+yarn add propmods
+```
+
+NPM:
 
 ```
 npm install --save propmods
 ```
 
-Then, import Propmods and choose a block name:
+## Usage
+
+This documentation assumes that you are using a modern JavaScript bundler like Webpack or Browserify, NPM package manager, and an ES2015 compiler (e.g. Babel).
+
+First, import Propmods and choose a block name:
 
 ```js
 import block from 'propmods';
+const b = block('button');
+```
+
+If you use CommonJS modules, you need to require `default` export:
+
+```js
+const block = require('propmods').default;
 const b = block('button');
 ```
 
@@ -113,6 +128,35 @@ const b = block('button', {
     modValueDelimiter: '_'
 });
 ```
+
+#### Q: I don't want to pass these options each time
+
+A: Create a wrapped function and put it in a separate file in your project. For example:
+
+```js
+// lib/bem.js:
+
+import block from 'propmods';
+
+const options = {
+    // Your options
+}
+
+export default function(name) {
+    return block(name, options);
+}
+
+
+// button.js:
+
+import block from '../lib/bem';
+
+const b = block('button');
+```
+
+### Typescript
+
+Propmods is written in Typescript and compiled down to ES5. This package already includes type declarations, so you can use it in your Typescript projects.
 
 ## License
 
