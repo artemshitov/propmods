@@ -28,12 +28,6 @@ const defaultOptions: Options = {
 
 const isValidClassName = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
 
-export function withOptions(opts: Partial<Options> = {}) {
-    return function (block: string) {
-        return propmods(block, opts);
-    }
-}
-
 export default function propmods(block: string, options: Partial<Options> = {}) {
     const opts: Options = assign({}, defaultOptions, options);
 
