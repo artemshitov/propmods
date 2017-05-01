@@ -58,7 +58,7 @@ Propmods will take your component's props and state, and will create appropriate
 You can also pass any other modifiers as arguments, or point directly to props, state or context if you don't wrap components into classes:
 
 ```js
-let Button = (props) => {
+const Button = (props) => {
     return <button {...b({foo: 'bar'}, props)}>{props.children}</button>;
 };
 ```
@@ -98,7 +98,7 @@ A: Propmods will apply a case converting function if you supply one when creatin
 ```js
 import _ from 'lodash';
 const b = block('button', {
-    caseConversion: _.kebabCase
+    transformKeys: _.kebabCase
 });
 ```
 
