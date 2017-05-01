@@ -1,29 +1,29 @@
 {
-  "name": "propmods",
-  "version": "0.4.0",
-  "description": "",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/artemshitov/propmods.git"
-  },
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "scripts": {
-    "compile": "tsc",
-    "prepublish": "npm run compile && npm test",
-    "test": "mocha --ui=tdd"
-  },
-  "author": "Artem Shitov <inbox@artemshitov.ru>",
-  "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {
-    "@types/lodash": "^4.14.62",
-    "@types/react": "^15.0.23",
-    "mocha": "^3.1.2",
-    "react": "^15.5.4",
-    "typescript": "2.3"
-  },
-  "peerDependencies": {
-    "react": "*"
-  }
+    "name": "propmods",
+    "version": "0.4.1",
+    "description": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/artemshitov/propmods.git"
+    },
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "scripts": {
+        "compile": "tsc",
+        "prepublish": "npm run compile && npm test",
+        "test": "mocha --ui=tdd"
+    },
+    "author": "Artem Shitov <inbox@artemshitov.ru>",
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {
+        "@types/lodash": "^4.14.62",
+        "@types/react": "^15.0.23",
+        "mocha": "^3.1.2",
+        "react": "^15.5.4",
+        "typescript": "2.3"
+    },
+    "peerDependencies": {
+        "react": "*"
+    }
 }
