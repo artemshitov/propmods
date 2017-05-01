@@ -28,15 +28,24 @@ const defaultOptions: Options = {
 
 const isValidClassName = /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
 
-export default function propmods(block: string, options: Partial<Options> = {}) {
+export default function block(name: string, options: Partial<Options> = {}) {
     const opts: Options = assign({}, defaultOptions, options);
 
-    return function (el: string | ClassesArg | undefined, ...rest: ClassesArg[]): ClassNameProp {
-        let base = block;
+    /**
+     * Construct a BEM class name
+     * @param el Element name
+     * @param args React components, props and mixins
+     */
+    function bem(): ClassNameProp;
+    function bem(el: string, ...args: ClassesArg[]): ClassNameProp;
+    function bem(...args: ClassesArg[]): ClassNameProp;
+    function bem(...args: (string | ClassesArg)[]): ClassNameProp {
+        let base = name;
         let mods = {};
         let mix: string[] = [];
 
         if (arguments.length > 0) {
+            const [el, ...rest] = args;
             if (typeof el === 'string') {
                 base += opts.elementDelimiter + el;
                 [mods, mix] = parseArgs(rest);
@@ -47,14 +56,8 @@ export default function propmods(block: string, options: Partial<Options> = {}) 
 
         return toClassName({ base, mods, mix }, opts);
     };
-}
 
-function pickMods(target: object): Mods {
-    return pickBy(target as Mods, (v, k) =>
-        v === true ||
-        typeof v === 'number' && Math.floor(v) === v ||
-        typeof v === 'string' && isValidClassName.test(k + v)
-    );
+    return bem;
 }
 
 function parseArgs(args: ClassesArg[]): [Mods, string[]] {
@@ -79,6 +82,26 @@ function parseArgs(args: ClassesArg[]): [Mods, string[]] {
     return [mods, mix];
 }
 
+/**
+ * Pick key-value pairs which make valid BEM modifiers
+ * @param target Object containing modifiers
+ */
+function pickMods(target: object): Mods {
+    return pickBy(target as Mods, (v, k) =>
+        // Modifier value is boolean and is `true`
+        v === true ||
+        // Modifier value is an integer
+        typeof v === 'number' && Math.floor(v) === v ||
+        // Modifier value is a string and makes a valid class name with its name
+        typeof v === 'string' && isValidClassName.test(k + v)
+    );
+}
+
+/**
+ * Turn all parsed options into a class name
+ * @param source Arguments parsed before
+ * @param opts Propmods options
+ */
 function toClassName(source: BEMEntity, opts: Options): ClassNameProp {
     const { base, mods, mix } = source;
     const modClasses = Object.keys(mods).map(key => {
