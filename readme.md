@@ -3,7 +3,7 @@
 Propmods is a low-boilerplate way to BEM-annotate your React components. Propmods keeps your JSX clean by turning component props and state into BEM modifiers automatically.
 
 ```js
-import React from 'react';
+import * as React from 'react';
 import block from 'propmods';
 
 const b = block('button');
@@ -99,7 +99,7 @@ To create BEM elements, pass the element's name as the first argument:
 A: You can pick whatever props and state you like.
 
 ```js
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 // ...
 
